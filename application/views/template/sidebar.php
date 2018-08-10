@@ -76,6 +76,7 @@ if ($uri == 'home') {
                 <span class="title">Dashboard</span>
                 </a>
             </li>
+            <?php if ($this->session->userdata('level') == 'Admin') { ?>
             <li class="<?=$meta;?>">
                 <a href="<?=site_url('admin/meta');?>">
                 <i class="icon-settings"></i>
@@ -100,18 +101,21 @@ if ($uri == 'home') {
                 <span class="title">Invitation</span>
                 </a>
             </li>
+            <?php } ?>
             <li class="<?=$arrive;?>">
                 <a href="<?=site_url('admin/arrive');?>">
                 <i class="fa fa-exchange"></i>
                 <span class="title">Arrival</span>
                 </a>
             </li>
+            <?php if ($this->session->userdata('level') == 'Admin') { ?>
             <li class="<?=$users;?>">
                 <a href="<?=site_url('admin/users');?>">
                 <i class="fa fa-users"></i>
                 <span class="title">Users</span>
                 </a>
             </li>
+            <?php } ?>
         </ul>
     </div>
 </div>

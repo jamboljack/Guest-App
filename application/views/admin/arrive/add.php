@@ -108,7 +108,7 @@
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="col-md-12" align="center">
-                                        <button type="submit" class="btn green"><i class="fa fa-floppy-o"></i> Save</button>
+                                        <button type="submit" class="btn green" id="btn-simpan"><i class="fa fa-floppy-o"></i> Save</button>
                                         <a href="<?=site_url('admin/arrive');?>" type="button" class="btn btn-warning"><i class="fa fa-times"></i> Cancel</a>
                                     </div>
                                 </div>
@@ -127,7 +127,12 @@
 <script type="text/javascript" src="<?=base_url();?>backend/assets/global/plugins/datatables/plugins/bootstrap/dataTables.bootstrap.js"></script>
 <script type="text/javascript" src="<?=base_url();?>backend/assets/global/plugins/jquery-validation/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
+$.validator.addMethod('lesserThan', function(value, element, param) {
+return ( value <= jQuery(param).val() );
+}, 'Harus sama atau Kurang dari Count' );
+
 function resetForm() {
+    $("#btn-simpan").hide();
     $("#barcode").val('');
     $("#id").val('');
     $("#name").val('');
@@ -148,6 +153,7 @@ function resetForm() {
 }
 
 $(document).ready(function() {
+    $("#btn-simpan").hide();
     $("#divSuccess").hide();
     $("#divError").hide();
     $("#countarrive").hide();
@@ -209,12 +215,29 @@ $(document).ready(function() {
                         $("#phone").val(response.phone);
                         $("#table").val(response.table);
                         $("#count").val(response.count);
+                        $("#count_arrive").val(response.count);
 
+                        $("#btn-simpan").show();
                         $("#divSuccess").show();
                         $("#divError").hide();
                         $("#divSuccess").html('<b>'+response.msg+'</b>');
                         $("#countarrive").show();
                         $("#count_arrive").focus();
+                    } else if(response.status === "update") {
+                        $("#id").val(response.id);
+                        $("#name").val(response.name);
+                        $("#address").val(response.address);
+                        $("#phone").val(response.phone);
+                        $("#table").val(response.table);
+                        $("#count").val(response.count);
+                        $("#count_arrive").val(response.count);
+
+                        $("#btn-simpan").hide();
+                        $("#divSuccess").show();
+                        $("#divError").hide();
+                        $("#divSuccess").html('<b>'+response.msg+'</b>');
+                        $("#countarrive").hide();
+                        $("#barcode").focus();
                     } else {
                         $("#barcode").val('');
                         $("#id").val('');
@@ -223,7 +246,9 @@ $(document).ready(function() {
                         $("#phone").val('');
                         $("#table").val('');
                         $("#count").val('');
+                        $("#count_arrive").val('');
 
+                        $("#btn-simpan").hide();
                         $("#divSuccess").hide();
                         $("#divError").show();
                         $("#divError").html('<b>'+response.msg+'</b>');
@@ -242,14 +267,13 @@ $(document).ready(function() {
     var form        = $('#formArrive');
     var error       = $('.alert-danger', form);
     var success     = $('.alert-success', form);
-
     $("#formArrive").validate({
         errorElement: 'span',
         errorClass: 'help-block help-block-error',
         focusInvalid: false,
         ignore: "",
         rules: {
-            count_arrive: { required: true, number: true }
+            count_arrive: { required: true, number: true, lesserThan: $("#count") }
         },
         messages: {
             count_arrive: {
@@ -277,13 +301,6 @@ $(document).ready(function() {
                 type: "POST",
                 data: dataString,
                 success: function(data) {
-                    swal({
-                        title:"Success",
-                        text: "Save Data Success",
-                        timer: 2000,
-                        showConfirmButton: false,
-                        type: "success"
-                    });
                     resetForm();
                 },
                 error: function() {

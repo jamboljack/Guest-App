@@ -74,15 +74,29 @@ class Arrive_m extends CI_Model
 
     public function insert_data()
     {
-        $data = array(
-            'invite_id'     => $this->input->post('id', 'true'),
-            'arrive_count'  => $this->input->post('count_arrive', 'true'),
-            'arrive_date'   => date('Y-m-d'),
-            'arrive_time'   => date('H:i:s'),
-            'arrive_update' => date('Y-m-d H:i:s'),
-        );
+        $invite_id = $this->input->post('id', 'true');
+        $check     = $this->db->get_where('guest_arrive', array('invite_id' => $invite_id))->result();
+        if (count($check) > 0) {
+            $data = array(
+                'arrive_count'  => $this->input->post('count_arrive', 'true'),
+                'arrive_date'   => date('Y-m-d'),
+                'arrive_time'   => date('H:i:s'),
+                'arrive_update' => date('Y-m-d H:i:s'),
+            );
 
-        $this->db->insert('guest_arrive', $data);
+            $this->db->where('invite_id', $invite_id);
+            $this->db->update('guest_arrive', $data);
+        } else {
+            $data = array(
+                'invite_id'     => $this->input->post('id', 'true'),
+                'arrive_count'  => $this->input->post('count_arrive', 'true'),
+                'arrive_date'   => date('Y-m-d'),
+                'arrive_time'   => date('H:i:s'),
+                'arrive_update' => date('Y-m-d H:i:s'),
+            );
+
+            $this->db->insert('guest_arrive', $data);
+        }
     }
 }
 /* Location: ./application/models/admin/Arrive_m.php */

@@ -20,7 +20,7 @@ $dataUser = $this->menu_m->select_user($username)->row();
                             <?php if (!empty($dataUser->user_avatar)) {?>
                             <img src="<?=base_url();?>img/icon/<?=$dataUser->user_avatar;?>" class="img-circle"/>
                             <?php } else {?>
-                            <img src="<?=base_url();?>img/no-image.jpg" class="img-circle"/>
+                            <img src="<?=base_url();?>img/avatar.png" class="img-circle"/>
                             <?php }?>
                             <span class="username username-hide-on-mobile"><?=ucwords(strtolower($dataUser->user_name));?></span>
                             <i class="fa fa-angle-down"></i>

@@ -74,7 +74,7 @@ class Arrive extends MY_Controller
                 );
             } else {
                 $callback = array(
-                    'status'  => 'success',
+                    'status'  => 'update',
                     'msg'     => 'TAMU UNDANGAN SUDAH PERNAH DATANG',
                     'id'      => $checkdata->invite_id,
                     'name'    => trim($checkdata->family_name),
