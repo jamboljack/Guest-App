@@ -14,6 +14,8 @@ MySQL - 10.1.30-MariaDB : Database - db_guest-app
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/`db_guest-app` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
+USE `db_guest-app`;
+
 /*Table structure for table `guest_arrive` */
 
 DROP TABLE IF EXISTS `guest_arrive`;
@@ -29,15 +31,15 @@ CREATE TABLE `guest_arrive` (
   KEY `invite_id` (`invite_id`),
   KEY `arrival_time` (`arrive_time`),
   CONSTRAINT `guest_arrive_ibfk_1` FOREIGN KEY (`invite_id`) REFERENCES `guest_invite` (`invite_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `guest_arrive` */
 
 insert  into `guest_arrive`(`arrive_id`,`invite_id`,`arrive_date`,`arrive_time`,`arrive_count`,`arrive_update`) values 
-(1,708,'2018-08-03','20:13:10',0,'2018-08-03 20:13:10'),
-(2,709,'2018-08-03','20:13:38',0,'2018-08-03 20:13:38'),
-(3,1,'2018-08-03','20:35:26',0,'2018-08-03 20:35:26'),
-(4,8,'2018-08-03','21:06:59',0,'2018-08-03 21:06:59');
+(5,709,'2018-08-09','20:03:41',4,'2018-08-09 20:03:41'),
+(6,708,'2018-08-09','20:06:42',5,'2018-08-09 20:06:42'),
+(7,710,'2018-08-09','20:10:54',3,'2018-08-09 20:10:54'),
+(8,27,'2018-08-09','20:20:35',4,'2018-08-09 20:20:35');
 
 /*Table structure for table `guest_family` */
 
@@ -3315,6 +3317,22 @@ DROP TABLE IF EXISTS `v_invite`;
  `table_name` varchar(50) 
 )*/;
 
+/*Table structure for table `v_kursi` */
+
+DROP TABLE IF EXISTS `v_kursi`;
+
+/*!50001 DROP VIEW IF EXISTS `v_kursi` */;
+/*!50001 DROP TABLE IF EXISTS `v_kursi` */;
+
+/*!50001 CREATE TABLE  `v_kursi`(
+ `table_name` varchar(50) ,
+ `jumlah_undangan` bigint(21) ,
+ `jumlah_scan` bigint(21) ,
+ `jumlah_kursi` decimal(32,0) ,
+ `jumlah_datang` decimal(32,0) ,
+ `sisa` decimal(33,0) 
+)*/;
+
 /*View structure for view v_arrive */
 
 /*!50001 DROP TABLE IF EXISTS `v_arrive` */;
@@ -3335,6 +3353,13 @@ DROP TABLE IF EXISTS `v_invite`;
 /*!50001 DROP VIEW IF EXISTS `v_invite` */;
 
 /*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_invite` AS (select `i`.`invite_id` AS `invite_id`,`i`.`invite_code` AS `invite_code`,`i`.`table_id` AS `table_id`,`i`.`family_id` AS `family_id`,`i`.`invite_count` AS `invite_count`,`i`.`invite_update` AS `invite_update`,`f`.`family_name` AS `family_name`,`f`.`family_gender` AS `family_gender`,`f`.`family_address` AS `family_address`,`f`.`family_phone` AS `family_phone`,`t`.`table_name` AS `table_name` from ((`guest_invite` `i` join `guest_family` `f` on((`i`.`family_id` = `f`.`family_id`))) join `guest_table` `t` on((`i`.`table_id` = `t`.`table_id`)))) */;
+
+/*View structure for view v_kursi */
+
+/*!50001 DROP TABLE IF EXISTS `v_kursi` */;
+/*!50001 DROP VIEW IF EXISTS `v_kursi` */;
+
+/*!50001 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_kursi` AS (select `t`.`table_name` AS `table_name`,count(`i`.`invite_id`) AS `jumlah_undangan`,count(`a`.`invite_id`) AS `jumlah_scan`,sum(`i`.`invite_count`) AS `jumlah_kursi`,sum(`a`.`arrive_count`) AS `jumlah_datang`,(sum(`i`.`invite_count`) - sum(`a`.`arrive_count`)) AS `sisa` from ((`guest_invite` `i` join `guest_table` `t` on((`i`.`table_id` = `t`.`table_id`))) left join `guest_arrive` `a` on((`i`.`invite_id` = `a`.`invite_id`))) group by `i`.`table_id`) */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
